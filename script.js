@@ -171,8 +171,7 @@ function placeOrder() {
   const order = {
     orderNumber: String(Math.floor(100000 + Math.random() * 900000)),
     items: cart,
-    total: cartTotal(cart),
-    placedAt: new Date().toISOString()
+    total: cartTotal(cart)
   };
   writeJSON(ORDER_KEY, order);
   saveCart([]);
