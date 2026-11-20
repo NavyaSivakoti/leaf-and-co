@@ -157,13 +157,21 @@ function validateForm() {
   } else if (!email.includes('@') || !email.includes('.')) {
     emailError = 'Enter a valid email';
   }
+  const phone = document.getElementById('phone').value;
+  let phoneError = '';
+  if (!phone.trim()) {
+    phoneError = 'Enter your phone number';
+  } else if (!/^\d{10}$/.test(phone)) {
+    phoneError = 'Phone number must be 10 digits';
+  }
   const addressError = address ? '' : 'Address is required';
 
   showError('full-name', 'full-name-error', nameError);
   showError('email', 'email-error', emailError);
+  showError('phone', 'phone-error', phoneError);
   showError('address', 'address-error', addressError);
 
-  return !nameError && !emailError && !addressError;
+  return !nameError && !emailError && !phoneError && !addressError;
 }
 
 function placeOrder() {
@@ -171,7 +179,8 @@ function placeOrder() {
   const order = {
     orderNumber: String(Math.floor(100000 + Math.random() * 900000)),
     items: cart,
-    total: cartTotal(cart)
+    total: cartTotal(cart),
+    phone: document.getElementById('phone').value
   };
   writeJSON(ORDER_KEY, order);
   saveCart([]);
@@ -199,6 +208,7 @@ function initConfirmation() {
   }
 
   document.getElementById('order-number').textContent = order.orderNumber;
+  document.getElementById('order-phone').textContent = 'Phone: ' + order.phone;
   document.getElementById('order-items').innerHTML = order.items.map(item => `
     <li id="ordered-${item.id}">${item.name} x ${item.qty} = ${money(item.price * item.qty)}</li>`).join('');
   document.getElementById('order-total').textContent = 'Total: ' + money(order.total);
